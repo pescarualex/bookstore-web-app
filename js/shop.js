@@ -11,6 +11,29 @@ window.Shop = {
         });
     },
 
+    addProductToCart: function (productId) {
+        //TODO: read userID dynamically
+        const userId = 1;
+
+        const requestBody = {
+            userId: userId,
+            productId: productId
+        }
+
+        $.ajax({
+            url: Shop.API_URL + "/carts",
+            contentType: "application/json",
+            method: "PUT",
+            data: JSON.stringify(requestBody)
+        }).done(function () {
+            window.location.replace("cart.html");
+        });
+
+    },
+
+
+
+
     getProductHtml: function (product) {
         return `
                 <div class="col-md-3 col-sm-6">
@@ -18,7 +41,7 @@ window.Shop = {
                         <div class="product-upper">
                             <img src="img/product-2.jpg" alt="">
                         </div>
-                        <h2><a href="">${product.name}</a></h2>
+                        <h2 id="single-product" data-product_id="${product.id}" class="single-product-name-link" href="">${product.name}</h2>
                         <div class="product-carousel-price">
                             <ins>$${product.price}</ins>
                         </div>  
@@ -34,12 +57,36 @@ window.Shop = {
     displayProducts: function (products) {
         let productsHtml = '';
 
-        products.forEach(product => productsHtml + Shop.getProductHtml(product));
+        products.forEach(product => productsHtml += Shop.getProductHtml(product));
 
         $('.single-product-area .row:first-child').html(productsHtml);
+    },
+
+
+
+
+
+    bindEvents: function () {
+        $(".single-product-area .row:first-child")
+            .delegate(".add_to_cart_button", 'click', function (event) {
+                event.preventDefault();
+
+                let productId = $(this).data('product_id');
+
+                Shop.addProductToCart(productId);
+            });
+
+        // $('.single-product-area .row')
+        //     .delegate(".single-product-name-link", 'click', function (event) {
+        //         event.preventDefault();
+        //
+        //         window.location.replace("single-product.html");
+        //
+        //     });
     }
-
-
 };
 
+let id =
+
 Shop.getProducts();
+Shop.bindEvents();
