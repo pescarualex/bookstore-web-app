@@ -41,7 +41,7 @@ window.Shop = {
                         <div class="product-upper">
                             <img src="img/product-2.jpg" alt="">
                         </div>
-                        <h2 id="single-product" data-product_id="${product.id}" class="single-product-name-link" href="">${product.name}</h2>
+                        <h2><a id="single-product" data-product_id="${product.id}" class="single-product-name-link" href="">${product.name}</a></h2>
                         <div class="product-carousel-price">
                             <ins>$${product.price}</ins>
                         </div>  
@@ -76,13 +76,15 @@ window.Shop = {
                 Shop.addProductToCart(productId);
             });
 
-        // $('.single-product-area .row')
-        //     .delegate(".single-product-name-link", 'click', function (event) {
-        //         event.preventDefault();
-        //
-        //         window.location.replace("single-product.html");
-        //
-        //     });
+        $('.single-product-area .row')
+            .delegate(".single-product-name-link", 'click', function (event) {
+                event.preventDefault();
+
+                const productId = $(this).data('product_id');
+
+                window.location.replace("single-product.html?productId=" + productId);
+
+            });
     }
 };
 

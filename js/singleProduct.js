@@ -7,10 +7,29 @@ window.SingleProduct = {
         $.ajax({
             url: SingleProduct.API_URL + "/products/" + productId,
             method: "GET"
-        }).done(function (response) {
-            // SingleProduct.displayProductDetail(response)
-            console.log(response);
+        }).done(function (product) {
+            SingleProduct.displayProductDetail(product);
         });
+    },
+
+    addProductToCart: function (productId) {
+        //TODO: read userID dynamically
+        const userId = 1;
+
+        const requestBody = {
+            userId: userId,
+            productId: productId
+        }
+
+        $.ajax({
+            url: SingleProduct.API_URL + "/carts",
+            contentType: "application/json",
+            method: "PUT",
+            data: JSON.stringify(requestBody)
+        }).done(function () {
+            window.location.replace("cart.html");
+        });
+
     },
 
 
@@ -36,13 +55,13 @@ window.SingleProduct = {
                           <h2 class="product-name">${product.name}</h2>
                           <div class="product-inner-price">
                               <ins>$${product.price}</ins>
-                          </div>    
-                          
+                          </div>   
+                           
                           <form action="" class="cart">
                               <div class="quantity">
                                   <input type="number" size="4" class="input-text qty text" title="Qty" value="1" name="quantity" min="1" step="1">
                               </div>
-                              <button class="add_to_cart_button" type="submit">Add to cart</button>
+                              <button class="add_to_cart_button" type="submit" data-product_id="${product.id}">Add to cart</button>
                           </form>   
                           
                           <div class="product-inner-category">
@@ -90,12 +109,29 @@ window.SingleProduct = {
     displayProductDetail: function (product) {
         let productsHtml = '';
 
-        product.forEach(product => productsHtml += SingleProduct.getSingleProductRow(product));
+        productsHtml += SingleProduct.getSingleProductRow(product);
 
         $('.single-product-area .row:first-child').html(productsHtml);
+    },
+
+
+    bindEvents: function () {
+        $(".single-product-area .row:first-child")
+            .delegate(".add_to_cart_button", 'click', function (event) {
+                event.preventDefault();
+
+                let productId = $(this).data('product_id');
+
+                SingleProduct.addProductToCart(productId);
+            });
     }
 };
 
+let urlParams = new URLSearchParams(window.location.search);
+let productId = urlParams.get('productId');
+
+SingleProduct.getProduct(productId);
+SingleProduct.bindEvents();
 
 
-SingleProduct.getProduct();
+

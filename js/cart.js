@@ -13,11 +13,22 @@ window.Cart = {
         });
     },
 
+    deleteProductFromCart: function (productId) {
+        $.ajax({
+            url: Cart.API_URL + "/carts",
+            method: "DELETE"
+        }).done(function () {
+            Cart.getCart();
+        });
+    },
+
+
+
     getProductRow: function (product) {
         return `
               <tr class="cart_item">
-                 <td class="product-remove">
-                     <a title="Remove this item" class="remove" href="#">×</a> 
+                 <td class="product-remove"">
+                     <a title="Remove this item" class="remove" href="#" data-product_id="${product.id}">×</a> 
                  </td>
 
                  <td class="product-thumbnail">
@@ -29,15 +40,12 @@ window.Cart = {
                  </td>
 
                  <td class="product-price">
-                     <span class="amount">$${product.price}</span> 
+                     <span id="price" class="amount">$${product.price}</span> 
                  </td>
 
                  <td class="product-quantity">
                      <div class="quantity buttons_added">
                              <h5 id="qty" class="input-text qty text">1</h5>
-<!--                         <input type="button" class="minus" value="-">-->
-<!--                         <input id="" type="number" size="4" class="input-text qty text" title="Qty" value="1" min="0" step="1">-->
-<!--                         <input type="button" class="plus" value="+">-->
                      </div>
                  </td>
 
@@ -48,9 +56,6 @@ window.Cart = {
         `
     },
 
-    getTotalOrder: function (product) {
-
-    },
 
     displayProductsInCart: function (products) {
         let productRow = '';
@@ -58,9 +63,22 @@ window.Cart = {
         products.forEach(product => productRow += Cart.getProductRow(product));
 
         $('table.shop_table.cart tbody').html(productRow);
-    }
+    },
 
+    bindEvents: function () {
+        $(".cart_item").delegate("remove", 'click', function (event) {
+            event.preventDefault();
+
+            let productId = $(this).data("product_id");
+
+            Cart.deleteProductFromCart(productId);
+
+        });
+    }
 
 };
 
+
 Cart.getCart();
+Cart.bindEvents();
+
