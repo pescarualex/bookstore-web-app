@@ -88,7 +88,6 @@ window.Shop = {
     }
 };
 
-let id =
 
 Shop.getProducts();
 Shop.bindEvents();
