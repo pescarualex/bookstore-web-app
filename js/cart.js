@@ -13,25 +13,33 @@ window.Cart = {
         });
     },
 
+
     deleteProductFromCart: function (productId) {
         const userId = 1;
 
         $.ajax({
-            url: Cart.API_URL + "/carts" + "/" + $.param({userId, productId}),
+            url: Cart.API_URL + "/carts/" + userId + "/" + productId,
             method: "DELETE",
         }).done(function () {
             Cart.getCart();
         });
     },
 
+    // deleteCart: function (userId) {
+    //     $.ajax({
+    //         url: Cart.API_URL + "/carts?userId=" + userId,
+    //         method: "DELETE"
+    //     }).done(function () {
+    //         Cart.getProductRow();
+    //     });
+    // },
+
 
     getProductRow: function (product) {
         return `
               <tr class="cart_item">
                  <td class="product-remove"">
-                 <input type="button" class="remove" value="X" data-product_id="${product.id}" />
-<!--                    <button type="button" title="Remove this item" class="remove" data-product_id="${product.id}" href="cart.html">×</button>-->
-<!--                     // <a title="Remove this item" class="remove" data-product_id="${product.id}">×</a> -->
+                    <input type="button" class="remove" value="x" data-product_id="${product.id}" />
                  </td>
 
                  <td class="product-thumbnail">
@@ -70,24 +78,22 @@ window.Cart = {
 
     bindEvents: function () {
         $(".shop_table")
-            .delegate("remove", 'click', function (event) {
-            event.preventDefault();
+            .delegate(".remove", 'click', function (event) {
+                event.preventDefault();
 
-            // const userId = 1;
-            //
-            // let productId = $(this).data("product_id");
-            // window.location.replace("cart.html?" + userId + productId);
-            //
-            // let userId = 1;
-            // let urlParams = new URLSearchParams(window.location.search);
-            // let prodId = urlParams.get('productId');
-            //
-            //
-            // Cart.deleteProductFromCart(productId);
+                let productId = $(this).data("product_id");
 
-                window.location.replace("shop.html");
-        });
+                Cart.deleteProductFromCart(productId);
+            });
 
+        // $('.col-md-8').delegate('.delete-cart', "click", function (event) {
+        //     event.preventDefault();
+        //
+        //     let userId = 1;
+        //
+        //     Cart.deleteCart(userId);
+        //     window.location.replace('shop.html');
+        // });
 
 
     }
