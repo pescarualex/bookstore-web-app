@@ -25,14 +25,6 @@ window.Cart = {
         });
     },
 
-    // deleteCart: function (userId) {
-    //     $.ajax({
-    //         url: Cart.API_URL + "/carts?userId=" + userId,
-    //         method: "DELETE"
-    //     }).done(function () {
-    //         Cart.getProductRow();
-    //     });
-    // },
 
 
     getProductRow: function (product) {
@@ -85,16 +77,6 @@ window.Cart = {
 
                 Cart.deleteProductFromCart(productId);
             });
-
-        // $('.col-md-8').delegate('.delete-cart', "click", function (event) {
-        //     event.preventDefault();
-        //
-        //     let userId = 1;
-        //
-        //     Cart.deleteCart(userId);
-        //     window.location.replace('shop.html');
-        // });
-
 
     }
 
