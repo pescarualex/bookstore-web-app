@@ -13,6 +13,14 @@ window.Cart = {
         });
     },
 
+    getTotalPrice: function (userId) {
+        $.ajax({
+            url: Cart.API_URL + "/carts?cartId=" + userId,
+            method: "GET",
+        }).done(function (response) {
+            Cart.displayTotalPriceInCart(response);
+        });
+    },
 
     deleteProductFromCart: function (productId) {
         const userId = 1;
@@ -24,7 +32,6 @@ window.Cart = {
             Cart.getCart();
         });
     },
-
 
 
     getProductRow: function (product) {
@@ -59,6 +66,16 @@ window.Cart = {
         `
     },
 
+    getTotalPriceRow: function (response) {
+        return `
+                   <tr class="order-total">
+                        <th>Order Total</th>
+                        <td><strong><span id="total-amount">$${response}</span></strong> </td>
+                   </tr> 
+
+        `
+    },
+
 
     displayProductsInCart: function (products) {
         let productRow = '';
@@ -66,6 +83,14 @@ window.Cart = {
         products.forEach(product => productRow += Cart.getProductRow(product));
 
         $('table.shop_table.cart tbody').html(productRow);
+    },
+
+    displayTotalPriceInCart: function (response) {
+        let productRow = '';
+
+        productRow += Cart.getTotalPriceRow(response);
+
+        $('.cart_totals .order-total').html(productRow);
     },
 
     bindEvents: function () {
@@ -82,7 +107,9 @@ window.Cart = {
 
 };
 
+userId = 1;
 
 Cart.getCart();
+Cart.getTotalPrice(userId);
 Cart.bindEvents();
 
